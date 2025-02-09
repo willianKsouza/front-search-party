@@ -1,20 +1,14 @@
 <template>
-  <div class="bg-cover bg-center max-w-[7.5rem] max-h-[7.5rem] w-full h-full rounded-lg shadow-lg" :style="{ backgroundImage: `url(${imageUrl})` }">
-    <img src="" alt="">
-    <!-- Conteúdo opcional pode ser inserido aqui -->
+  <div class="w-full h-[90px] overflow-hidden">
+    <img
+      src="../assets/bg-home.png"
+      alt="Background"
+      class="w-full h-full object-cover"
+    />
   </div>
 </template>
 
 <script setup>
-defineProps({
-  imageUrl: {
-    type: String,
-    required: true,
-  },
-  maxSizeRem: {
-    type: Number,
-    default: 7.5, // 120px em rem padrão (7.5rem * 16px)
-  },
-});
+// Seu código JavaScript aqui
 </script>
 

@@ -12,6 +12,5 @@ import SearchInput from './SearchInput.vue'
 import PostsGallery from './PostsGallery.vue';
 import NewPost from './NewPost.vue';
 
-
 </script>
 

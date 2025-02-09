@@ -1,7 +1,7 @@
 <template>
   <div class="navbar bg-base-100">
     <div class="navbar-start">
-      <div class="dropdown">
+      <div class="dropdown" v-if="showMenu">
         <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -36,7 +36,7 @@
       </div>
       <a class="btn btn-ghost text-xl"><RouterLink to="/">Search Party</RouterLink></a>
     </div>
-    <div class="navbar-center hidden lg:flex">
+    <div class="navbar-center hidden lg:flex" v-if="showMenu">
       <ul class="menu menu-horizontal px-1">
         <li><RouterLink to="/">Home</RouterLink></li>
         <li><RouterLink to="/posts">My Posts</RouterLink></li>
@@ -45,8 +45,9 @@
     </div>
 
     <div class="navbar-end">
+      <Logout v-if="showMenu"/> 
       <ThemeController class="mr-10" />
-      <div class="avatar">
+      <div class="avatar" v-if="showMenu">
         <div class="w-12 rounded-full">
           <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
         </div>
@@ -55,5 +56,11 @@
   </div>
 </template>
 <script setup>
+
 import ThemeController from './ThemeController.vue'
+import { useRoute } from 'vue-router';
+import { computed } from 'vue';
+import Logout from './Logout.vue';
+const route = useRoute()
+const showMenu = computed(() => !(route.path == '/login'))
 </script>

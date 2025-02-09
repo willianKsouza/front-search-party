@@ -2,16 +2,9 @@
   <div class="bg-base-200 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
     <div class="card w-full max-w-sm bg-base-100 shadow-xl">
       <div class="card-body">
-        <!-- Header -->
-        <h2 class="card-title text-2xl font-bold text-center justify-center">
-          Login
-        </h2>
-        <p class="text-center text-base-content/60 mt-2">
-          Bem-vindo de volta!
-        </p>
+        <h2 class="card-title text-2xl font-bold text-center justify-center">Login</h2>
 
-        <form @submit.prevent="handleSubmit" class="space-y-4 mt-4">
-          <!-- Email/Username -->
+        <form @submit.prevent="handleSubmit" method="post" class="space-y-4 mt-4">
           <div class="form-control w-full">
             <label class="label">
               <span class="label-text">Email</span>
@@ -20,15 +13,13 @@
               type="text"
               v-model="form.email"
               placeholder="Digite seu email ou usuário"
-              :class="{'input-error': errors.email}"
+              :class="{ 'input-error': errors.email }"
               class="input input-bordered w-full"
             />
             <label class="label" v-if="errors.email">
               <span class="label-text-alt text-error">{{ errors.email }}</span>
             </label>
           </div>
-
-          <!-- Password -->
           <div class="form-control w-full">
             <label class="label">
               <span class="label-text">Senha</span>
@@ -37,42 +28,44 @@
               type="password"
               v-model="form.password"
               placeholder="Digite sua senha"
-              :class="{'input-error': errors.password}"
+              :class="{ 'input-error': errors.password }"
               class="input input-bordered w-full"
             />
             <label class="label">
-              <span class="label-text-alt text-error" v-if="errors.password">{{ errors.password }}</span>
-              <a href="/forgot-password" class="label-text-alt link link-primary">Esqueceu a senha?</a>
+              <span class="label-text-alt text-error" v-if="errors.password">{{
+                errors.password
+              }}</span>
+              <a href="/forgot-password" class="label-text-alt link link-primary"
+                >Esqueceu a senha?</a
+              >
             </label>
           </div>
-
-          <!-- Remember me checkbox -->
           <div class="form-control">
             <label class="label cursor-pointer justify-start gap-2">
               <input type="checkbox" class="checkbox checkbox-primary" v-model="form.rememberMe" />
               <span class="label-text">Manter conectado</span>
             </label>
           </div>
-
-          <!-- Error message -->
           <div v-if="loginError" class="alert alert-error">
-            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="stroke-current shrink-0 h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
             </svg>
             <span>{{ loginError }}</span>
           </div>
-
-          <!-- Login button -->
-          <button
-            type="submit"
-            class="btn btn-primary w-full"
-            :disabled="isLoading"
-          >
+          <button type="submit" class="btn btn-primary w-full" :disabled="isLoading">
             <span class="loading loading-spinner" v-if="isLoading"></span>
             {{ isLoading ? 'Entrando...' : 'Entrar' }}
           </button>
-
-          <!-- Register link -->
           <div class="text-center mt-4">
             <span class="text-sm">
               Não tem uma conta?
@@ -86,62 +79,75 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
-
-// Form state
-const form = reactive({
+import router from '@/router'
+import { useRoute } from 'vue-router'
+import { useStore } from '@/stores/store'
+import { computed, onMounted, ref } from 'vue'
+const store = useStore()
+const form = ref({
   email: '',
   password: '',
-  rememberMe: false
+  rememberMe: false,
 })
 
-// Error states
-const errors = reactive({
+const errors = ref({
   email: '',
-  password: ''
+  password: '',
 })
+
+
 
 const isLoading = ref(false)
 const loginError = ref('')
 
-// Form validation
 const validateForm = () => {
   let isValid = true
 
-  // Reset errors
-  errors.email = ''
-  errors.password = ''
+  errors.value.email = ''
+  errors.value.password = ''
   loginError.value = ''
 
-  // Email/Username validation
-  if (!form.email.trim()) {
-    errors.email = 'Email ou usuário é obrigatório'
+  if (!form.value.email.trim()) {
+    errors.value.email = 'Email ou usuário é obrigatório'
     isValid = false
   }
 
-  // Password validation
-  if (!form.password) {
-    errors.password = 'Senha é obrigatória'
+  if (!form.value.password) {
+    errors.value.password = 'Senha é obrigatória'
     isValid = false
   }
 
   return isValid
 }
 
-// Form submission
-const handleSubmit = async () => {
+async function handleSubmit(){
   if (!validateForm()) return
 
   try {
     isLoading.value = true
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    console.log('Login successful', form)
+    const formData = new FormData()
+    formData.set('email', form.value.email)
+    formData.set('password', form.value.password)
+    await fetch(`${import.meta.env.VITE_URL_API_LOGIN}`, {
+      method: 'POST',
+      body:formData
+    }).then((response) => {
 
+      if (response.ok == true && response.status == 200) {
+        return response.json()
+      }
+    })
+    .then(data => {
+
+      localStorage.setItem('authToken', data.token)
+      router.push('/')
+    })
   } catch (error) {
     loginError.value = 'Ocorreu um erro ao fazer login. Tente novamente.'
-    console.error('Login error:', error)
   } finally {
     isLoading.value = false
   }
 }
+
+
 </script>

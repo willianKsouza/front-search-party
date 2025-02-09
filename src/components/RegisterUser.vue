@@ -76,7 +76,7 @@
       <div class="text-center mt-4">
         <span class="text-sm">
           Já tem uma conta?
-          <a href="/login" class="link link-primary">Faça login</a>
+          <router-link class="link-primary" to="/login">Faça login</router-link>
         </span>
       </div>
     </div>
@@ -85,7 +85,7 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-
+import { useRouter } from 'vue-router'
 const form = ref({
   username: '',
   email: '',
@@ -93,7 +93,7 @@ const form = ref({
   repeatPassword: '',
   bio: '',
 })
-
+const router = useRouter()
 const passwordsMatch = computed(() => {
   return form.value.password === form.value.repeatPassword
 })
@@ -110,19 +110,15 @@ async function submitForm() {
   formData.append('password', form.value.password)
   formData.append('bio', form.value.bio)
 
-  fetch(`${import.meta.env.VITE_URL_API}/user/create`, {
+  fetch(`${import.meta.env.VITE_URL_API_CREATE}`, {
     method: 'POST',
     body: formData,
-    headers:{
-      'x-teste':'algum valor'
-    }
   })
-    .then((response) => {
-      console.log(response.status)
-
-      return response.json()
+  .then((response) => {
+      if (response.status == 204 && response.ok == true) {
+        router.push({ name: 'activation' })
+      }
     })
-    .then((data) => console.log(data))
     .catch((error) => console.log(error))
 
   // form.value = {

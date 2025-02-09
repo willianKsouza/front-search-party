@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import CreateAccount from '@/views/CreateAccount.vue'
 import Login from '@/views/Login.vue'
+import AccountView from '@/views/UserActivation/AccountView.vue'
+import { useStore } from '@/stores/store'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -10,6 +12,17 @@ const router = createRouter({
       path: '/register',
       name: 'register',
       component: CreateAccount,
+    },
+    {
+      path: '/activation',
+      name: 'activation',
+      component: AccountView,
+    },
+    {
+      path:'/:feedback/:id',
+      name:'feedback',
+      props: true,
+      component: () => import('../views/UserActivation/activationFeedback.vue')
     },
     {
       path: '/login',
@@ -41,10 +54,9 @@ const router = createRouter({
 
 
 // router.beforeEach((to, from, next) => {
-
 //   if (to.meta.requiresAuth) {
-//     const isAuthenticated = checkIfUserIsLoggedIn(); // Implemente essa função
-//     if (!isAuthenticated) {
+//     const store = useStore()
+//     if (!store.checkAuthentication()) {
 //       next({ name: 'login' });
 //     } else {
 //       next();
@@ -54,8 +66,7 @@ const router = createRouter({
 //   }
 // });
 
-// function checkIfUserIsLoggedIn() {
-//   return !!localStorage.getItem('authToken');
-// }
+
+
 
 export default router
