@@ -4,6 +4,8 @@ import CreateAccount from '@/views/CreateAccount.vue'
 import Login from '@/views/Login.vue'
 import AccountView from '@/views/UserActivation/AccountView.vue'
 import { useStore } from '@/stores/store'
+import MyProfile from '@/views/MyProfile.vue'
+import { fetchUserProfile } from '@/functions/UseFetchProfile'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -30,6 +32,16 @@ const router = createRouter({
       component: Login,
     },
     {
+      path: '/forgot-password',
+      name: 'forgot-password',
+      component: () => import('../views/ForgotPassword.vue'),
+    },
+    {
+      path: '/change-password/:id',
+      name: 'change-password',
+      component: () => import('../views/ChangePassword.vue'),
+    },
+    {
       path: '/',
       name: 'home',
       component: HomeView,
@@ -39,7 +51,7 @@ const router = createRouter({
       path: '/profile',
       name: 'profile',
       meta: { requiresAuth: true },
-      component: () => import('../views/MyProfile.vue'),
+      component: MyProfile,
     },
     {
       path: '/posts',
@@ -50,21 +62,21 @@ const router = createRouter({
   ],
 })
 
+router.beforeEach(async (to, from, next) => {
+  const store = useStore()
+ await fetchUserProfile()
+ console.log(store.profile);
 
-
-
-// router.beforeEach((to, from, next) => {
-//   if (to.meta.requiresAuth) {
-//     const store = useStore()
-//     if (!store.checkAuthentication()) {
-//       next({ name: 'login' });
-//     } else {
-//       next();
-//     }
-//   } else {
-//     next();
-//   }
-// });
+  if (to.meta.requiresAuth) {
+    if (!store.checkAuthentication()) {
+      next({ name: 'login' });
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
+});
 
 
 

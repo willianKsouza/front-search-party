@@ -2,10 +2,13 @@ import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { jwtDecode } from 'jwt-decode'
 
-export const useStore = defineStore('counter', () => {
+export const useStore = defineStore('main', () => {
   const profile = ref({
     username: '',
     bio: '',
+    email: '',
+    id: '',
+    avatarUrl: '',
   })
 
   const isAuthenticated = ref(false)
@@ -30,8 +33,13 @@ export const useStore = defineStore('counter', () => {
 
 function decodedToken() {
   const token = localStorage.getItem('authToken')
-  const decoded = jwtDecode(token)
-  return decoded
+  if (token) {
+    const decoded = jwtDecode(token)
+    return decoded
+  }else {
+    return false
+  }
+
 }
 
   return { isAuthenticated, computedIsAuthenticated, checkAuthentication, profile, insertDataProfile,decodedToken }

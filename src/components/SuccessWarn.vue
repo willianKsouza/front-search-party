@@ -1,5 +1,7 @@
 <template >
-          <div v-if="showSuccess" class="alert alert-success mt-4">
+<div>
+
+  <div v-if="showSuccess" class="alert alert-success mt-4">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               class="stroke-current shrink-0 h-6 w-6"
@@ -13,11 +15,15 @@
                 d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            <span>Perfil atualizado com sucesso!</span>
+            <span>{{ message }}</span>
           </div>
+</div>
 </template>
 <script setup>
-const props = defineProps({
-  showSuccess: Boolean
+ defineProps({
+  showSuccess: Boolean,
+  message: String
 })
+
+
 </script>

@@ -35,8 +35,8 @@
               <span class="label-text-alt text-error" v-if="errors.password">{{
                 errors.password
               }}</span>
-              <a href="/forgot-password" class="label-text-alt link link-primary"
-                >Esqueceu a senha?</a
+              <router-link to="/forgot-password" class="label-text-alt link link-primary"
+                >Esqueceu a senha?</router-link
               >
             </label>
           </div>
@@ -138,11 +138,11 @@ async function handleSubmit(){
       }
     })
     .then(data => {
-
       localStorage.setItem('authToken', data.token)
       router.push('/')
     })
   } catch (error) {
+
     loginError.value = 'Ocorreu um erro ao fazer login. Tente novamente.'
   } finally {
     isLoading.value = false

@@ -1,10 +1,12 @@
 <template>
   <div class="card w-96 bg-base-100 shadow-xl">
     <div class="card-body">
+
       <div v-if="!isEditing">
         <h2 class="card-title text-lg font-bold">{{ title }}</h2>
-        <p>{{ description }}</p>
+        <p> Lorem ipsum dolor sit amet consectetur adipisicing...</p>
       </div>
+
 
       <div v-else>
         <input
@@ -57,80 +59,64 @@
       </div>
     </div>
 
-    <PostModal
-      :isModalOpen="isModalOpen"
-      :title="title"
-      :description="description"
-      :chatMessages="chatMessages"
-      @close="closeModal"
-    />
+    <div
+      v-if="isModalOpen"
+      class="modal modal-open"
+    >
+      <div class="modal-box">
+        <h2 class="font-bold text-lg">{{ title }}</h2>
+        <p class="py-4">{{ description }}</p>
+        <div class="modal-action">
+          <button class="btn btn-secondary" @click="closeModal">Fechar</button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
-<script setup>
-import { ref } from 'vue'
-import PostModal from './PostModal.vue'
-
-const props = defineProps({
-  title: {
-    type: String,
-    required: true
+<script>
+export default {
+  name: "EditableCard",
+  props: {
+    title: {
+      type: String,
+      required: true,
+    },
+    description: {
+      type: String,
+      required: true,
+    },
   },
-  description: {
-    type: String,
-    required: true
-  }
-})
-
-const emit = defineEmits(['update', 'delete'])
-
-const isEditing = ref(false)
-const isModalOpen = ref(false)
-const editedTitle = ref(props.title)
-const editedDescription = ref(props.description)
-
-const chatMessages = ref([
-  {
-    author: 'João',
-    text: 'Olá, tudo bem?',
-    time: '10:30',
-    isUser: false
+  data() {
+    return {
+      isEditing: false,
+      isModalOpen: false,
+      editedTitle: this.title,
+      editedDescription: this.description,
+    };
   },
-  {
-    author: 'Maria',
-    text: 'Oi! Tudo ótimo, e com você?',
-    time: '10:32',
-    isUser: true
-  }
-])
-
-const startEditing = () => {
-  isEditing.value = true
-  editedTitle.value = props.title
-  editedDescription.value = props.description
-}
-
-const saveChanges = () => {
-  if (editedTitle.value.trim() && editedDescription.value.trim()) {
-    isEditing.value = false
-    emit('update', {
-      title: editedTitle.value,
-      description: editedDescription.value
-    })
-  }
-}
-
-const cancelEditing = () => {
-  isEditing.value = false
-  editedTitle.value = props.title
-  editedDescription.value = props.description
-}
-
-const openModal = () => {
-  isModalOpen.value = true
-}
-
-const closeModal = () => {
-  isModalOpen.value = false
-}
+  methods: {
+    startEditing() {
+      this.isEditing = true;
+    },
+    saveChanges() {
+      this.isEditing = false;
+      this.$emit("update", {
+        title: this.editedTitle,
+        description: this.editedDescription,
+      });
+    },
+    cancelEditing() {
+      this.isEditing = false;
+      this.editedTitle = this.title;
+      this.editedDescription = this.description;
+    },
+    openModal() {
+      this.isModalOpen = true;
+    },
+    closeModal() {
+      this.isModalOpen = false;
+    },
+  },
+};
 </script>
