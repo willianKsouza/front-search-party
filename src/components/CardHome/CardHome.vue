@@ -1,5 +1,5 @@
 <template>
-  <div class="card w-96 bg-base-100 shadow-xl">
+  <div class="card w-[22rem] bg-base-100 shadow-xl">
     <div class="card-body">
       <div v-if="!isEditing">
         <h2 class="card-title text-lg font-bold">{{ title }}</h2>

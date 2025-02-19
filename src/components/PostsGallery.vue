@@ -1,18 +1,45 @@
 <template>
-    <section>
-      <div class="flex flex-col  mx-auto px-4">
-        <div class="flex flex-wrap justify-center gap-4">
-          <!-- <CardHome title="the king of fighter" description="jogar the king" /> -->
-
-        </div>
-        <Pagination class="mx-auto mt-36"/>
+  <section class="mx-10">
+    <div class="flex flex-col mx-auto px-4">
+      <div
+        class="grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] justify-items-center gap-x-16 gap-y-4"
+      >
+        <CardHome
+          v-for="post in posts"
+          :title="post.title"
+          :description="post.body"
+          :key="post.id"
+        />
       </div>
-    </section>
+    </div>
+  </section>
 </template>
 <script setup>
-import CardHome from './CardHome/CardHome.vue';
-import Pagination from './Pagination.vue';
-</script>
-<style >
+import { onMounted, ref } from 'vue'
+import CardHome from './CardHome/CardHome.vue'
+import { useRoute } from 'vue-router'
+import { useStore } from '@/stores/store'
+const posts = ref('')
 
-</style>
+const route = useRoute()
+const store = useStore()
+onMounted(() => {
+  async function getPosts() {
+    let url
+    if (route.path === '/') {
+      url = `${import.meta.env.VITE_URL_API_GET_ALL_POSTS}`
+    } else {
+      url = `${import.meta.env.VITE_URL_API_GET_ALL_POSTS}?id=${store.profile.id}`
+    }
+    const token = localStorage.getItem('authToken')
+    const fetchPosts = await fetch(`${url}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    const data = await fetchPosts.json()
+    posts.value = data
+  }
+ getPosts()
+})
+</script>

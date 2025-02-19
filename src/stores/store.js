@@ -28,6 +28,8 @@ export const useStore = defineStore('main', () => {
   function insertDataProfile(obj) {
     profile.value.username = obj.username
     profile.value.bio = obj.bio
+    profile.value.email = obj.email
+    profile.value.id = obj.id
   }
 
 

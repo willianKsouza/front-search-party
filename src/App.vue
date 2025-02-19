@@ -1,9 +1,9 @@
 <template>
-  <div class="min-h-screen flex flex-col bg-base-200">
+  <div class="h-screen flex flex-col bg-base-200">
     <Header />
     <BackgroundHome />
-    <main class="flex-grow">
-      <RouterView />
+    <main class="flex flex-col h-full">
+      <RouterView class="flex-grow flex flex-col justify-between"/>
     </main>
     <Footer />
   </div>

@@ -18,7 +18,7 @@ export async function fetchUserProfile() {
           id: data.user.id_user,
         }
         store.insertDataProfile(userProfile)
-        console.log(store.profile);
+    
       })
   }
 }
